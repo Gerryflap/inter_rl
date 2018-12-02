@@ -8,9 +8,9 @@ model = ks.models.Sequential()
 model.add(ks.layers.Dense(100, input_shape=(4,), activation='tanh'))
 model.add(ks.layers.Dense(100, activation='tanh'))
 model.add(ks.layers.Dense(2, activation='linear'))
-model.compile(optimizer=ks.optimizers.Adam(0.001), loss='mse')
+model.compile(optimizer=ks.optimizers.Adam(0.0001), loss='mse')
 
-trainer = QTrainer(model, batches_per_update=1, fixed_length=100, gamma=0.9)
+trainer = QTrainer(model, batches_per_update=1, fixed_length=100, gamma=0.99)
 
 app = server.get_server(trainer)
 
