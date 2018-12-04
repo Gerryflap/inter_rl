@@ -7,9 +7,11 @@ import keras as ks
 
 
 class QTrainer(Trainer):
-    def __init__(self, model: ks.models.Model, gamma=0.99, fixed_length=1000, batches_per_update=100, batch_size=320, minibatch_size=32):
+    def __init__(self, model: ks.models.Model, gamma=0.99, fixed_length=1000, batches_per_update=100, batch_size=320,
+                 minibatch_size=32, replay_size=10000):
         """
         The QTrainer used to train a model using deepQ learning
+        :param replay_size:
         :param model: Keras model
         :param gamma: Discount Factor
         :param fixed_length: Number of updates before the fixed network is updated
@@ -37,6 +39,7 @@ class QTrainer(Trainer):
         self.batches_per_update = batches_per_update
         self.batch_size = batch_size
         self.minibatch_size = minibatch_size
+        self.replay_size = replay_size
 
     def add_experiences(self, experiences):
         self.replay += experiences
@@ -51,7 +54,7 @@ class QTrainer(Trainer):
     def sample_batch(self):
         batch = []
         for i in range(self.batch_size):
-            s, a, r, sp, term = random.choice(self.replay)
+            s, a, r, sp, term = random.choice(self.replay[-self.replay_size:])
             batch.append((s, a, r, sp, term))
 
         states = np.stack([exp[0] for exp in batch], axis=0)
